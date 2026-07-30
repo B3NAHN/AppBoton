@@ -7,7 +7,12 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
-      <CustomButton/>
+      <CustomButton title={'Boton personalizado'} 
+      onPress={() => {console.log('Boton presionado');}} />
+
+      <CustomButton title={'Boton generico'} 
+      onPress={() => {console.log('Boton presionado 2');}} />
+
       <StatusBar style="auto" />
     </View>
   );
@@ -16,7 +21,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },
