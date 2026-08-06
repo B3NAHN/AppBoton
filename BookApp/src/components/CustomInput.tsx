@@ -1,36 +1,46 @@
-import React from 'react';
-import { TextInput, StyleSheet } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 
-interface CustomInputProps {
+type Props = {
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
-}
+};
 
-const CustomInput = ({
+export default function CustomInput({
   placeholder,
   value,
   onChangeText,
-}: CustomInputProps) => {
+}: Props) {
   return (
-    <TextInput
-      style={styles.input}
-      placeholder={placeholder}
-      value={value}
-      onChangeText={onChangeText}
-    />
+    <View style={styles.inputContainer}>
+        <MaterialIcons name={"lock"} size={22} />
+        <TextInput
+            style={styles.input}
+            placeholder={placeholder}
+            value={value}
+            onChangeText={onChangeText}
+        />
+        <TouchableOpacity>
+            <Ionicons name="eye" size={22} />
+        </TouchableOpacity>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  input: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#999',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-  },
-});
-
-export default CustomInput;
+    inputContainer: {
+        //distribucion de componentes con flexbox
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'lightgray',
+        borderColor: 'gray',
+        borderWidth: 1,
+        borderRadius: 9,
+        paddingLeft: 20,
+        paddingRight: 20,
+    },
+    input: {
+        width: '50%',
+    }
+})
