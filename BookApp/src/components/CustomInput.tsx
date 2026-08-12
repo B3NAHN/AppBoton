@@ -1,4 +1,11 @@
-import { KeyboardTypeOptions,  StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardTypeOptions,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Text,
+} from "react-native";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 
@@ -13,58 +20,81 @@ export default function CustomInput({
   placeholder,
   value,
   onChangeText,
-  type = "default"
-
+  type = "default",
 }: Props) {
-  //tema: Manejo de estado LOCAL {en el componente}
-  //hook: useState
+  //tema: manejo de estado LOCAL {en el componente}
+  //hook: useState para definir variable en el estado
+  const [isSecureText, setIsSecureText] = useState(type === "password");
+  //Primera accion: inicializar la variable
+  //Segunda accion: utilizar la variable; ej: en propiedad secureTextEntry de TextInput
+  //Tercera accion: actualizar su valor; setIsSecureText(true)
+  const isPasswordField = type === "password";
 
-const [isSecureText, setIsSecureText] = useState(false);
-//Primera accion: incializar la variable
-//segunda accion: utilizar la variable, en propiedad secureTextEntry de TextInput
-//tercera accion: actualizar su valor; setIsSecureText(true)
+  const icon: (typeof MaterialIcons)["name"] | undefined =
+    type === "password"
+      ? "lock"
+      : type === "email"
+        ? "alternate-email"
+        : undefined;
 
-const icon : typeof MaterialIcons["name"] | undefined =
-  type === "password" ? "lock" :
-  type === "email" ? "alternate-email" : undefined;
+  const keyboardType: KeyboardTypeOptions =
+    type === "email"
+      ? "email-address"
+      : type === "number"
+        ? "number-pad"
+        : "default";
 
+  const getError = () => {
+    if (type === "email" && !value.includes("@")) return "Correo invalido";
+    if (type === "password" &&  value.length < 4) return "La contraseña es debil"
+  };
 
-const keyboardType : KeyboardTypeOptions =
-  type === "email" ? "email-address" :
-  type === "number" ? "number-pad" : "default"
-
+  const error = getError();
+  
   return (
-    <View style={styles.inputContainer}>
+    <View style = {styles.wrapper}>
+      <View style={styles.inputContainer}>
         <MaterialIcons name={icon as any} size={22} />
         <TextInput
-            style={styles.input}
-            placeholder={placeholder}
-            value={value}
-            onChangeText={onChangeText}
-            keyboardType={keyboardType}
-            secureTextEntry={isSecureText}
+          style={styles.input}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChangeText}
+          keyboardType={keyboardType}
+          secureTextEntry={isSecureText}
         />
-        <TouchableOpacity>
-            <Ionicons name="eye" size={22} />
-        </TouchableOpacity>
+        {isPasswordField && (
+          <TouchableOpacity
+            onPress={() => {
+              setIsSecureText(!isSecureText);
+            }}
+          >
+            <Ionicons name={isSecureText ? "eye" : "eye-off"} size={22} />
+          </TouchableOpacity>
+        )}
+      </View>
+      <Text>{error}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    inputContainer: {
-        //distribucion de componentes con flexbox
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: 'lightgray',
-        borderColor: 'gray',
-        borderWidth: 1,
-        borderRadius: 9,
-        paddingLeft: 20,
-        paddingRight: 20,
-    },
-    input: {
-        width: '50%',
-    }
-})
+  wrapper: {
+    marginBottom: 10,
+  },
+  inputContainer: {
+    //distribucion de componentes con flexbox
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "lightgray",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 9,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  input: {
+    width: "50%",
+  },
+});
